@@ -1,19 +1,22 @@
-import { Alchemy, Network } from 'alchemy-sdk';
+import { createPublicClient, http } from "viem"; 
+import { mainnet } from "viem/chains";
+ 
+const client = createPublicClient({
+  chain: mainnet,
+  transport: http("https://eth-mainnet.g.alchemy.com/v2/zNLNJXD_JwjwaubEpdjwa3-nDIZ6-VKR"),
+});
 
-// Refer to the README doc for more information about using API
-// keys in client-side code. You should never do this in production
-// level code.
-const settings = {
-  apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET,
-};
+export function getBlock( id ) {
+  if(id){
+    return client.getBlock(id);
+  }else {
+    return client.getBlock("latest");
+  }
+}
 
+export function getTx(id) {
+   return client.getTransactionReceipt({ 
+      hash: id
+    });
+}
 
-// In this week's lessons we used ethers.js. Here we are using the
-// Alchemy SDK is an umbrella library with several different packages.
-//
-// You can read more about the packages here:
-//   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
-const alchemy = new Alchemy(settings);
-
-export default alchemy;
